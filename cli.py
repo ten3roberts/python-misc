@@ -46,6 +46,8 @@ def print_help(dummy):
     print(" -> 'help' shows you available commands")
 
 
+# Dictionary to lookup entered commands
+# Works like a switch in C
 commands = {
     'speak': User.speak,
     'balance': User.get_balance,
