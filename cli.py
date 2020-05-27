@@ -1,5 +1,6 @@
 import random
 
+# Dictionary containing all registered users
 users = {}
 
 
@@ -57,9 +58,14 @@ commands = {
 User("Tim", 100)
 User("Emma", 160)
 
+# Print the users
+print("Registered users:")
 
+for u in users:
+    print(" -> ", u)
+
+# Ask user to login with a name
 user = None
-
 while True:
     print("login:", end=' ')
     username = input()
@@ -71,6 +77,7 @@ while True:
 
 print("Welcome back", user.name)
 
+# Do commands
 while True:
     print(user.name + ":", end=' ')
     cmd = input().lower()
