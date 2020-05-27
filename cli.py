@@ -38,6 +38,7 @@ class User:
 
 
 def print_help(dummy):
+    print(" -> 'exit', 'logout' or 'quit' to logout")
     print(" -> 'speak' says a random message")
     print(" -> 'balance' displays your current balance")
     print(" -> 'work' earns you a random amount")
@@ -82,8 +83,14 @@ while True:
     print(user.name + ":", end=' ')
     cmd = input().lower()
 
+    # Exit the program if user types any of these commands
+    if cmd in ["exit", "logout", "quit"]:
+        break
+
+    # Lookup entered command to a function, if it exists
     if cmd in commands:
         commands[cmd](user)
+
     else:
         print("[error]: invalid command, use 'help' for a list of commands")
 
