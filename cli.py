@@ -7,13 +7,15 @@ users = {}
 class User:
     name = ""
     balance = 100
+    salary = 10
 
-    def __init__(self, name, balance):
+    def __init__(self, name, balance, salary):
         if self.name in users:
             print("[error]: user", self.name, "already exists")
             return
         self.name = name
         self.balance = balance
+        self.salary = salary
 
         users[self.name] = self
 
@@ -24,9 +26,8 @@ class User:
         print("Your balance is $" + str(self.balance))
 
     def work(self):
-        earn = random.randint(10, 15)
-        print("You earned $" + str(earn))
-        self.balance += earn
+        print("You earned $" + str(self.salary))
+        self.balance += self.salary
 
     def spend(self):
         lose = random.randint(15, 20)
@@ -57,9 +58,18 @@ commands = {
 }
 
 
-# Create users
-User("Tim", 100)
-User("Emma", 160)
+# Load users from file
+file = open("users.txt", "r")
+linenum = 0
+# Users are formed with $name,$balance,$salary\n
+for line in file:
+    parts = line.split(",")
+    if len(parts) != 3:
+        print("[error]: malformed user file in line", linenum)
+    else:
+        User(parts[0], parts[1], parts[2])
+
+    linenum += 1
 
 # Print the users
 print("Registered users:")
