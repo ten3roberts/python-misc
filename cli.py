@@ -1,4 +1,5 @@
 import random
+import os
 
 # Dictionary containing all registered users
 users = {}
@@ -14,8 +15,8 @@ class User:
             print("[error]: user", self.name, "already exists")
             return
         self.name = name
-        self.balance = balance
-        self.salary = salary
+        self.balance = float(balance)
+        self.salary = float(salary)
 
         users[self.name] = self
 
@@ -46,6 +47,40 @@ def print_help(dummy):
     print(" -> 'spend' spends a random amount")
     print(" -> 'help' shows you available commands")
 
+# Load users from file
+
+
+def load_users():
+    file = open("users.txt", "r")
+    linenum = 0
+    # Users are formed with $name,$balance,$salary\n
+    for line in file:
+        parts = line.split(",")
+        if len(parts) != 3:
+            print("[error]: malformed user file in line", linenum)
+            return
+        else:
+            User(parts[0], parts[1], parts[2])
+
+        linenum += 1
+    file.close()
+
+
+def save_users():
+    # Save to intermediate file so a crash doesn't erase all users
+    file = open("users.txt.tmp", "w")
+
+    # Loop through and save all users
+    # Since user data is so small partial rewriting may cost more than saving all
+    for uname, user in users.items():
+        file.write("%s,%f,%f\n" % (user.name, user.balance, user.salary))
+
+    file.close()
+
+    # Move intermediate to user file
+    os.remove("users.txt")
+    os.rename("users.txt.tmp", "users.txt")
+
 
 # Dictionary to lookup entered commands
 # Works like a switch in C
@@ -57,19 +92,8 @@ commands = {
     'help': print_help
 }
 
-
-# Load users from file
-file = open("users.txt", "r")
-linenum = 0
-# Users are formed with $name,$balance,$salary\n
-for line in file:
-    parts = line.split(",")
-    if len(parts) != 3:
-        print("[error]: malformed user file in line", linenum)
-    else:
-        User(parts[0], parts[1], parts[2])
-
-    linenum += 1
+# Load users
+load_users()
 
 # Print the users
 print("Registered users:")
@@ -107,3 +131,6 @@ while True:
         print("[error]: invalid command, use 'help' for a list of commands")
 
     print()
+
+    # Save users after every command in case user ^C
+    save_users()
